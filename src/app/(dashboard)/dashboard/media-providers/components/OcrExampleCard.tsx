@@ -1,80 +1,67 @@
-"use client";
-
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { useApiKey } from "../../providers/hooks/useApiKey";
-import { useProviderModels } from "../../providers/hooks/useProviderModels";
-import { buildCurl } from "../../providers/utils/buildCurl";
 import { PlaygroundCard } from "./PlaygroundCard";
 
-interface Props {
+const ENDPOINT_PATH = "/v1/ocr";
+
+interface OcrExampleCardProps {
   providerId: string;
+  models?: Array<{ id: string; name?: string }>;
 }
 
-const ENDPOINT_PATH = "/api/v1/ocr";
-const SAMPLE_DOCUMENT_URL = "https://arxiv.org/pdf/2201.04234";
+export function OcrExampleCard({ providerId, models }: OcrExampleCardProps) {
+  const t = useTranslations("mediaProviders");
+  const modelOptions =
+    models && models.length > 0
+      ? models
+      : [
+          { id: "glm-ocr", name: "GLM-OCR (Local)" },
+          { id: "deepseek-ocr2", name: "DeepSeek-OCR2 (Local)" },
+          { id: "got-ocr2", name: "GOT-OCR2 (Local)" },
+          { id: "mistral-ocr-latest", name: "Mistral OCR" },
+        ];
 
-function extractError(data: unknown): string | null {
-  if (!data || typeof data !== "object") return null;
-  const d = data as Record<string, unknown>;
-  const err = d.error as Record<string, unknown> | undefined;
-  if (err?.message) return String(err.message);
-  if (typeof d.message === "string") return d.message;
-  return null;
-}
-
-export function OcrExampleCard({ providerId }: Props) {
-  const t = useTranslations("miniPlayground");
-  const { apiKey } = useApiKey();
-  const { models } = useProviderModels(providerId);
-
-  const firstModel = models[0]?.id ?? "";
-  const [model, setModel] = useState<string>("");
-  const [documentUrl, setDocumentUrl] = useState<string>(SAMPLE_DOCUMENT_URL);
-  const [running, setRunning] = useState<boolean>(false);
-  const [result, setResult] = useState<{ data: unknown; latencyMs: number } | undefined>();
+  const [selectedModel, setSelectedModel] = useState<string>(
+    modelOptions[0].id
+  );
+  const [docUrl, setDocUrl] = useState<string>(
+    "https://raw.githubusercontent.com/madmaze/pytesseract/master/tests/data/test.png"
+  );
+  const [running, setRunning] = useState(false);
+  const [result, setResult] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const effectiveModel = model || firstModel;
-
-  const buildBody = () => ({
-    model: effectiveModel,
-    document: { type: "document_url", document_url: documentUrl },
-  });
-
-  const curlSnippet = buildCurl({
-    endpoint:
-      (typeof window !== "undefined" ? window.location.origin : "http://localhost:20128") +
-      ENDPOINT_PATH,
-    headers: {
-      Authorization: `Bearer ${apiKey || "<your-api-key>"}`,
-      "Content-Type": "application/json",
+  const requestBody = JSON.stringify(
+    {
+      model: selectedModel,
+      document: {
+        type: "image_url",
+        image_url: docUrl,
+      },
     },
-    body: buildBody(),
-  });
+    null,
+    2
+  );
+
+  const curlSnippet = `curl -X POST http://localhost:20128${ENDPOINT_PATH} \\
+  -H "Content-Type: application/json" \\
+  -d '${requestBody.replace(/\n\s*/g, " ")}'`;
 
   const handleRun = async () => {
     setRunning(true);
+    setResult(null);
     setError(null);
-    setResult(undefined);
-    const t0 = performance.now();
     try {
       const res = await fetch(ENDPOINT_PATH, {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          "Content-Type": "application/json",
-          "x-connection-id": providerId,
-        },
-        body: JSON.stringify(buildBody()),
+        headers: { "Content-Type": "application/json" },
+        body: requestBody,
       });
-      const data: unknown = await res.json();
-      const latencyMs = performance.now() - t0;
-      const errMsg = extractError(data);
-      if (!res.ok || errMsg) {
-        setError(errMsg ?? `HTTP ${res.status}`);
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data?.error?.message || `HTTP ${res.status}`);
       } else {
-        setResult({ data, latencyMs });
+        setResult(JSON.stringify(data, null, 2));
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : t("requestFailed"));
@@ -82,8 +69,6 @@ export function OcrExampleCard({ providerId }: Props) {
       setRunning(false);
     }
   };
-
-  const modelOptions = models.length > 0 ? models : [{ id: "mistral-ocr-latest" }];
 
   return (
     <PlaygroundCard
@@ -99,26 +84,27 @@ export function OcrExampleCard({ providerId }: Props) {
       <div>
         <label className="block text-xs text-text-muted mb-1">{t("model")}</label>
         <select
-          value={model || firstModel}
-          onChange={(e) => setModel(e.target.value)}
-          className="w-full rounded-md border border-border bg-bg-subtle text-sm px-2 py-1.5 text-text-main focus:outline-none focus:ring-1 focus:ring-primary"
+          value={selectedModel}
+          onChange={(e) => setSelectedModel(e.target.value)}
+          className="w-full text-xs bg-bg-surface border border-border rounded px-2 py-1 text-text"
         >
           {modelOptions.map((m) => (
             <option key={m.id} value={m.id}>
-              {m.id}
+              {m.name || m.id}
             </option>
           ))}
         </select>
       </div>
+
       {/* Document URL */}
       <div>
         <label className="block text-xs text-text-muted mb-1">{t("documentUrl")}</label>
         <input
           type="text"
-          value={documentUrl}
-          onChange={(e) => setDocumentUrl(e.target.value)}
-          placeholder={SAMPLE_DOCUMENT_URL}
-          className="w-full rounded-md border border-border bg-bg-subtle text-sm px-2 py-1.5 text-text-main focus:outline-none focus:ring-1 focus:ring-primary"
+          value={docUrl}
+          onChange={(e) => setDocUrl(e.target.value)}
+          placeholder="https://example.com/document.pdf or image.png"
+          className="w-full text-xs bg-bg-surface border border-border rounded px-2 py-1 text-text font-mono"
         />
       </div>
     </PlaygroundCard>

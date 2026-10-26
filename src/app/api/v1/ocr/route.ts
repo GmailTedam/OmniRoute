@@ -29,7 +29,7 @@ export async function OPTIONS() {
 
 /**
  * POST /v1/ocr — document OCR
- * Mistral OCR API compatible.
+ * Mistral OCR API compatible with dynamic best & cheapest model routing.
  */
 async function postHandler(request, context) {
   let rawBody;
@@ -45,18 +45,19 @@ async function postHandler(request, context) {
   }
   const body = validation.data;
 
-  const model = body.model || "mistral-ocr-latest";
+  // Dynamic resolution: best & cheapest model wins (defaults to local GLM-OCR)
+  const resolved = parseOcrModel(body.model);
+  const model = resolved.model || "glm-ocr";
+  const resolvedProvider = resolved.provider || "local";
 
   // Enforce API key policies (model restrictions + budget limits)
   const policy = await enforceApiKeyPolicy(request, model);
   if (policy.rejection) return policy.rejection;
 
-  const { provider } = parseOcrModel(model);
-
-  // Default to mistral if no provider prefix
-  const resolvedProvider = provider || "mistral";
-  const credentials = await getProviderCredentialsWithQuotaPreflight(resolvedProvider);
-  if (!credentials) {
+  let credentials = await getProviderCredentialsWithQuotaPreflight(resolvedProvider);
+  if (!credentials && resolvedProvider === "local") {
+    credentials = { apiKey: "local" };
+  } else if (!credentials) {
     return errorResponse(
       HTTP_STATUS.BAD_REQUEST,
       `No credentials for provider: ${resolvedProvider}`

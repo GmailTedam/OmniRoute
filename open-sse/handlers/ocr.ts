@@ -3,9 +3,10 @@ import { CORS_HEADERS } from "../utils/cors.ts";
  * OCR Handler
  *
  * Handles POST /v1/ocr (Mistral OCR API format).
+ * Routes dynamically to best and cheapest provider (Local GLM-OCR or Cloud).
  */
 
-import { getOcrProvider, parseOcrModel } from "../config/ocrRegistry.ts";
+import { getOcrProvider, parseOcrModel, OCR_PROVIDERS } from "../config/ocrRegistry.ts";
 import { errorResponse } from "../utils/error.ts";
 import { attachOmniRouteMetaHeaders } from "@/domain/omnirouteResponseMeta";
 import { generateRequestId } from "@/shared/utils/requestId";
@@ -25,27 +26,32 @@ export async function handleOcr({ body, credentials }) {
     return errorResponse(400, "document is required");
   }
 
-  // Default to latest OCR model
-  const model = body.model || "mistral-ocr-latest";
-  const { provider: providerId, model: modelId } = parseOcrModel(model);
+  // Dynamic resolution: best and cheapest model wins
+  const { provider: providerId, model: modelId } = parseOcrModel(body.model);
   const providerConfig = providerId ? getOcrProvider(providerId) : null;
 
   if (!providerConfig) {
-    return errorResponse(400, `No OCR provider found for model "${model}". Available: mistral`);
+    const available = Object.keys(OCR_PROVIDERS).join(", ");
+    return errorResponse(400, `No OCR provider found for model "${body.model}". Available: ${available}`);
   }
 
-  const token = credentials?.apiKey || credentials?.accessToken;
-  if (!token) {
+  const isLocalNoAuth = providerConfig.authType === "none";
+  const token = credentials?.apiKey || credentials?.accessToken || (isLocalNoAuth ? "local" : null);
+  if (!token && !isLocalNoAuth) {
     return errorResponse(401, `No credentials for OCR provider: ${providerId}`);
   }
 
   try {
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+    };
+    if (token && !isLocalNoAuth) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+
     const res = await fetch(providerConfig.baseUrl, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers,
       body: JSON.stringify({
         ...body,
         model: modelId,
@@ -64,16 +70,16 @@ export async function handleOcr({ body, credentials }) {
     }
 
     const data = await res.json();
-    const headers = new Headers({ ...CORS_HEADERS, "Content-Type": "application/json" });
-    attachOmniRouteMetaHeaders(headers, {
+    const responseHeaders = new Headers({ ...CORS_HEADERS, "Content-Type": "application/json" });
+    attachOmniRouteMetaHeaders(responseHeaders, {
       provider: providerId,
       model: modelId,
       costUsd: 0,
       latencyMs: Date.now() - startTime,
       requestId: generateRequestId(),
     });
-    return new Response(JSON.stringify(data), { status: 200, headers });
-  } catch (err) {
+    return new Response(JSON.stringify(data), { status: 200, headers: responseHeaders });
+  } catch (err: any) {
     return errorResponse(500, `OCR request failed: ${err.message}`);
   }
 }
