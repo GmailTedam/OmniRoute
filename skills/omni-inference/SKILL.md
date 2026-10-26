@@ -223,13 +223,14 @@ curl https://localhost:20128/api/v1/providers/{provider}/models \
 
 Document OCR
 
-Mistral OCR–compatible document OCR endpoint. Accepts a JSON body referencing a document/image and returns extracted text. Success responses carry the `X-OmniRoute-*` cost-telemetry headers.
+Multi-engine document OCR endpoint supporting local open-source models (`local/glm-ocr`, `local/deepseek-ocr2`, `local/got-ocr2`) at $0.00 marginal cost with zero-key proxying, as well as cloud fallback (`mistral-ocr-latest`). Implements dynamic "best and cheapest model wins" resolution. Accepts a JSON body referencing a document/image and returns extracted text. Success responses carry the `X-OmniRoute-*` cost-telemetry headers.
 
 ```bash
+# Local GLM-OCR (Default: Zero Key, $0.00 marginal cost)
 curl -X POST https://localhost:20128/api/v1/ocr \
-  -H "Authorization: Bearer $OMNIROUTE_TOKEN"
+  -H "Authorization: Bearer $OMNIROUTE_TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{}'
+  -d '{"model": "local/glm-ocr", "document": {"type": "image_url", "image_url": "data:image/jpeg;base64,..."}}'
 ```
 
 ### POST /api/v1/audio/translations
