@@ -5577,9 +5577,12 @@ paths:
         - Images
       summary: Document OCR
       description: >-
-        Mistral OCR–compatible document OCR endpoint. Accepts a JSON body
-        referencing a document/image and returns extracted text. Success
-        responses carry the `X-OmniRoute-*` cost-telemetry headers.
+        Multi-engine document OCR endpoint supporting local open-source models
+        (GLM-OCR, DeepSeek-OCR2, GOT-OCR2) at $0.00 marginal cost with zero-key
+        proxying, as well as cloud fallback (Mistral OCR) with dynamic "best
+        and cheapest model wins" resolution. Accepts a JSON body referencing a
+        document/image and returns extracted text. Success responses carry the
+        `X-OmniRoute-*` cost-telemetry headers.
       security:
         - BearerAuth: []
       requestBody:
