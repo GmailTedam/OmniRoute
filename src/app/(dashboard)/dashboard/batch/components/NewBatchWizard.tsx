@@ -6,7 +6,12 @@ import DestinationStep from "./wizard/DestinationStep";
 import InputStep from "./wizard/InputStep";
 import JsonlValidationStep from "./wizard/JsonlValidationStep";
 import CostEstimateStep from "./wizard/CostEstimateStep";
-import type { WizardDestination, WizardInput, ValidationResult, CostEstimate } from "@/lib/batches/types";
+import type {
+  WizardDestination,
+  WizardInput,
+  ValidationResult,
+  CostEstimate,
+} from "@/lib/batches/types";
 
 // ── State ─────────────────────────────────────────────────────────────────────
 
@@ -102,7 +107,13 @@ const STEP_LABELS: Record<number, string> = {
   4: "wizardStep4Cost",
 };
 
-function StepIndicator({ current, t }: { current: 1 | 2 | 3 | 4; t: ReturnType<typeof useTranslations<"common">> }) {
+function StepIndicator({
+  current,
+  t,
+}: {
+  current: 1 | 2 | 3 | 4;
+  t: ReturnType<typeof useTranslations<"common">>;
+}) {
   return (
     <div className="flex items-center gap-1 sm:gap-2">
       {STEPS.map((s) => {
@@ -114,11 +125,7 @@ function StepIndicator({ current, t }: { current: 1 | 2 | 3 | 4; t: ReturnType<t
               className={`flex items-center justify-center w-6 h-6 rounded-full text-xs font-medium transition-colors
                 ${isDone ? "bg-emerald-500 text-white" : isCurrent ? "bg-[var(--color-accent)] text-white" : "bg-[var(--color-border)] text-[var(--color-text-muted)]"}`}
             >
-              {isDone ? (
-                <span className="material-symbols-outlined text-sm">check</span>
-              ) : (
-                s
-              )}
+              {isDone ? <span className="material-symbols-outlined text-sm">check</span> : s}
             </div>
             <span
               className={`hidden sm:inline text-xs ${isCurrent ? "text-[var(--color-text)]" : "text-[var(--color-text-muted)]"}`}
@@ -310,7 +317,7 @@ export default function NewBatchWizard({
 
       {/* Panel */}
       <div
-        className="relative w-full sm:max-w-3xl max-h-[90vh] flex flex-col rounded-t-2xl sm:rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)] shadow-2xl overflow-hidden"
+        className="relative w-full sm:max-w-none w-full max-h-[90vh] flex flex-col rounded-t-2xl sm:rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)] shadow-2xl overflow-hidden"
         role="dialog"
         aria-modal="true"
         aria-labelledby="new-batch-wizard-title"
@@ -318,7 +325,12 @@ export default function NewBatchWizard({
         {/* Header */}
         <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-[var(--color-border)] shrink-0">
           <div className="flex flex-col gap-2">
-            <h2 id="new-batch-wizard-title" className="text-base font-semibold text-[var(--color-text)]">{t("wizardTitle")}</h2>
+            <h2
+              id="new-batch-wizard-title"
+              className="text-base font-semibold text-[var(--color-text)]"
+            >
+              {t("wizardTitle")}
+            </h2>
             <StepIndicator current={state.step} t={t} />
           </div>
           <button

@@ -62,7 +62,7 @@ export default function Modal({
     md: "max-w-md",
     lg: "max-w-lg",
     xl: "max-w-xl",
-    full: "max-w-4xl",
+    full: "max-w-none w-full",
   };
 
   // Lock body scroll when modal is open

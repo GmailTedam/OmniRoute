@@ -1846,7 +1846,11 @@ export default function EvalsTab() {
   );
 }
 
-const HeroSection = memo(function HeroSection({ t }: { t: (key: string, values?: Record<string, unknown>) => string }) {
+const HeroSection = memo(function HeroSection({
+  t,
+}: {
+  t: (key: string, values?: Record<string, unknown>) => string;
+}) {
   return (
     <Card className="p-0 overflow-hidden">
       <div
@@ -1862,7 +1866,7 @@ const HeroSection = memo(function HeroSection({ t }: { t: (key: string, values?:
           </div>
           <div className="flex-1">
             <h2 className="text-xl font-bold text-text-main mb-1">{t("modelEvals")}</h2>
-            <p className="text-sm text-text-muted leading-relaxed max-w-2xl">
+            <p className="text-sm text-text-muted leading-relaxed max-w-none w-full">
               {t("evalsHeroDescription")}
             </p>
             <div className="flex flex-wrap items-center gap-4 mt-4">

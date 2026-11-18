@@ -538,7 +538,7 @@ export default function ProviderOnboardingWizard() {
   );
 
   return (
-    <div className="mx-auto flex max-w-5xl flex-col gap-6">
+    <div className="mx-auto flex max-w-none w-full flex-col gap-6">
       <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
         <div>
           <Link
@@ -550,7 +550,7 @@ export default function ProviderOnboardingWizard() {
           <h1 className="mt-2 text-3xl font-bold text-text-main">
             {text("onboardingWizard", "Provider Onboarding Wizard")}
           </h1>
-          <p className="mt-2 max-w-2xl text-sm text-text-muted">
+          <p className="mt-2 max-w-none w-full text-sm text-text-muted">
             {text(
               "onboardingWizardDescription",
               "Connect API-key, custom compatible, and OAuth providers with validation, persistence, and an immediate connection test."

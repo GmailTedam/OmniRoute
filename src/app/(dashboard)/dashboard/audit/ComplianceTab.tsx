@@ -330,7 +330,9 @@ export default function ComplianceTab() {
                       </td>
                       <td className="px-4 py-3">
                         <span className="rounded-md border border-border bg-surface px-2 py-1 font-mono text-xs text-text-main">
-                          {t.has(`eventTypes.${entry.action}`) ? t(`eventTypes.${entry.action}`) : entry.action}
+                          {t.has(`eventTypes.${entry.action}`)
+                            ? t(`eventTypes.${entry.action}`)
+                            : entry.action}
                         </span>
                       </td>
                       <td className="px-4 py-3">
@@ -391,7 +393,7 @@ export default function ComplianceTab() {
             className="absolute inset-0 bg-black/30 backdrop-blur-sm"
             onClick={() => setSelectedEntry(null)}
           />
-          <div className="relative w-full max-w-3xl rounded-xl border border-border bg-surface shadow-2xl">
+          <div className="relative w-full max-w-none w-full rounded-xl border border-border bg-surface shadow-2xl">
             <div className="flex items-center justify-between border-b border-border p-4">
               <h3 className="text-lg font-semibold text-text-main">{t("details")}</h3>
               <button

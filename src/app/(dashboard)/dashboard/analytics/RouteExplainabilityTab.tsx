@@ -558,7 +558,7 @@ export default function RouteExplainabilityTab({
           <h2 className="text-lg font-semibold text-text-main">
             {analyticsText(t, "routeTraceTitle", "Route Trace View")}
           </h2>
-          <p className="mt-1 max-w-3xl text-sm text-text-muted">
+          <p className="mt-1 max-w-none w-full text-sm text-text-muted">
             {analyticsText(
               t,
               "routeTraceDescription",

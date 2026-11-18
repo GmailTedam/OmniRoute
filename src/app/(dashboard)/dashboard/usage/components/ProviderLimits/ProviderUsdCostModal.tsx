@@ -136,7 +136,7 @@ export default function ProviderUsdCostModal({
       onClick={onClose}
     >
       <div
-        className="w-full max-w-3xl max-h-[88vh] overflow-hidden rounded-lg border border-border bg-surface shadow-xl"
+        className="w-full max-w-none w-full max-h-[88vh] overflow-hidden rounded-lg border border-border bg-surface shadow-xl"
         onClick={(event) => event.stopPropagation()}
       >
         <div className="flex items-start justify-between gap-4 border-b border-border px-5 py-4">

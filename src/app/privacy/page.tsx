@@ -16,7 +16,7 @@ export default function PrivacyPage() {
 
   return (
     <main className="min-h-screen text-text-main">
-      <div className="max-w-3xl mx-auto px-6 py-16">
+      <div className="max-w-none w-full mx-auto px-6 py-16">
         <Link
           href="/"
           className="inline-flex items-center gap-1 text-sm text-text-muted hover:text-primary transition-colors mb-8"

@@ -78,7 +78,9 @@ export default function NewsViewer() {
 
         <div className="flex-1">
           <h2 className="text-xl font-bold text-text-main mb-2">{news.title}</h2>
-          <p className="text-sm text-text-muted leading-relaxed max-w-2xl">{news.message}</p>
+          <p className="text-sm text-text-muted leading-relaxed max-w-none w-full">
+            {news.message}
+          </p>
         </div>
 
         {news.link && (

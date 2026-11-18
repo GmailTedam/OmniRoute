@@ -54,7 +54,15 @@ const sections = [
     subtitle: "Deep dive into architecture, APIs, and internals",
     icon: "code",
     color: "blue",
-    folders: ["architecture", "reference", "frameworks", "routing", "security", "compression", "ops"],
+    folders: [
+      "architecture",
+      "reference",
+      "frameworks",
+      "routing",
+      "security",
+      "compression",
+      "ops",
+    ],
   },
 ];
 
@@ -62,7 +70,7 @@ export default function DocsHomePage() {
   const pages = source.getPages();
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4">
+    <div className="max-w-none w-full mx-auto py-8 px-4">
       <div className="text-center mb-16 mt-8">
         <h1 className="text-4xl font-bold text-fd-foreground mb-5">OmniRoute Documentation</h1>
         <p className="text-lg text-fd-muted-foreground mb-6">

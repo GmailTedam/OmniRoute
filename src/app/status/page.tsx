@@ -66,7 +66,7 @@ export default function StatusPage() {
 
   return (
     <main className="min-h-screen text-text-main p-6 sm:p-10">
-      <section className="max-w-4xl mx-auto space-y-6">
+      <section className="max-w-none w-full mx-auto space-y-6">
         <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">System Status</h1>

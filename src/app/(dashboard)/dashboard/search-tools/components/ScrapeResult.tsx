@@ -157,7 +157,7 @@ export default function ScrapeResult({ result, latencyMs }: ScrapeResultProps) {
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/60"
           data-testid="raw-modal"
         >
-          <div className="bg-surface border border-border rounded-xl shadow-2xl w-[90vw] max-w-4xl h-[80vh] flex flex-col">
+          <div className="bg-surface border border-border rounded-xl shadow-2xl w-[90vw] max-w-none w-full h-[80vh] flex flex-col">
             <div className="flex justify-between items-center px-4 py-3 border-b border-border">
               <span className="text-sm font-semibold text-text-main">
                 {t("rawContent", { size: formatBytes(contentSize) })}

@@ -20,7 +20,7 @@ export default function GetStarted() {
 
   return (
     <section className="py-24 px-6 bg-[#080A0F]">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-none w-full mx-auto">
         <div className="flex flex-col lg:flex-row gap-16 items-start">
           {/* Left: Steps */}
           <div className="flex-1">

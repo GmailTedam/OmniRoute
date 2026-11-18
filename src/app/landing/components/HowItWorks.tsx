@@ -6,7 +6,7 @@ export default function HowItWorks() {
 
   return (
     <section className="py-24 border-y border-[#2D333B] bg-[#111520]/30" id="how-it-works">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-none w-full mx-auto px-6">
         <div className="mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">{t("howItWorks")}</h2>
           <p className="text-gray-400 max-w-xl text-lg">{t("howItWorksDescription")}</p>

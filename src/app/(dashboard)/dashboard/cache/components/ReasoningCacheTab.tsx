@@ -218,7 +218,9 @@ export default function ReasoningCacheTab() {
           </SectionBadge>
           <div>
             <h2 className="text-lg font-semibold text-text-main">{t("reasoningCache")}</h2>
-            <p className="mt-1 max-w-3xl text-sm text-text-muted">{t("reasoningCacheDesc")}</p>
+            <p className="mt-1 max-w-none w-full text-sm text-text-muted">
+              {t("reasoningCacheDesc")}
+            </p>
           </div>
         </div>
         <Button

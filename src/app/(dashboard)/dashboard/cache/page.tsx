@@ -508,7 +508,7 @@ export default function CachePage() {
                 </SectionBadge>
                 <div>
                   <h2 className="text-lg font-semibold text-text-main">{t("promptCache")}</h2>
-                  <p className="mt-1 max-w-3xl text-sm text-text-muted">
+                  <p className="mt-1 max-w-none w-full text-sm text-text-muted">
                     {t("promptCacheSectionDesc")}
                   </p>
                 </div>
@@ -687,7 +687,7 @@ export default function CachePage() {
                 </div>
                 <div>
                   <h2 className="text-lg font-semibold text-text-main">{t("semanticCache")}</h2>
-                  <p className="mt-1 max-w-3xl text-sm text-text-muted">
+                  <p className="mt-1 max-w-none w-full text-sm text-text-muted">
                     {t("semanticCacheSectionDesc")}
                   </p>
                 </div>

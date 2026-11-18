@@ -58,7 +58,7 @@ function PageHeader() {
           {t("preview")}
         </span>
       </div>
-      <p className="max-w-2xl text-sm text-text-muted">{t("description")}</p>
+      <p className="max-w-none w-full text-sm text-text-muted">{t("description")}</p>
     </div>
   );
 }
@@ -246,7 +246,7 @@ export default function OmniglyphContextPageClient() {
   };
 
   return (
-    <div className="mx-auto flex max-w-4xl flex-col gap-6 p-6" data-testid="omniglyph-page">
+    <div className="mx-auto flex max-w-none w-full flex-col gap-6 p-6" data-testid="omniglyph-page">
       <PageHeader />
       <EconomicsCard />
       <BeforeAfterCard />

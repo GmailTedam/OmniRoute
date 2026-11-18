@@ -141,12 +141,24 @@ function formatTs(ts: number | null | undefined): string {
   });
 }
 
-export default function BatchDetailModal({ batch, files, onClose, onActionDone }: BatchDetailModalProps) {
+export default function BatchDetailModal({
+  batch,
+  files,
+  onClose,
+  onActionDone,
+}: BatchDetailModalProps) {
   const t = useTranslations("common");
 
   // ── Action hook (F7) ─────────────────────────────────────────────────────────
-  const { cancelling, retrying, error: actionError, cancel, retry, downloadHrefOutput, downloadHrefErrors } =
-    useBatchActions({ onRefresh: onActionDone, t });
+  const {
+    cancelling,
+    retrying,
+    error: actionError,
+    cancel,
+    retry,
+    downloadHrefOutput,
+    downloadHrefErrors,
+  } = useBatchActions({ onRefresh: onActionDone, t });
 
   // ── Status flags ──────────────────────────────────────────────────────────────
   const isTerminal = ["completed", "failed", "cancelled", "expired"].includes(batch.status);
@@ -183,7 +195,7 @@ export default function BatchDetailModal({ batch, files, onClose, onActionDone }
 
       {/* Panel */}
       <div
-        className="relative w-full sm:max-w-2xl bg-[var(--color-surface)] border border-[var(--color-border)] rounded-t-2xl sm:rounded-xl shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-200 max-h-[90vh] flex flex-col"
+        className="relative w-full sm:max-w-none w-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded-t-2xl sm:rounded-xl shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-200 max-h-[90vh] flex flex-col"
         role="dialog"
         aria-modal="true"
         aria-labelledby="batch-detail-modal-title"
@@ -195,7 +207,10 @@ export default function BatchDetailModal({ batch, files, onClose, onActionDone }
               pending_actions
             </span>
             <div>
-              <h2 id="batch-detail-modal-title" className="text-base font-semibold text-[var(--color-text-main)]">
+              <h2
+                id="batch-detail-modal-title"
+                className="text-base font-semibold text-[var(--color-text-main)]"
+              >
                 Batch Details
               </h2>
               <div className="flex items-center gap-2 mt-0.5">
@@ -438,7 +453,7 @@ export default function BatchDetailModal({ batch, files, onClose, onActionDone }
                   if (
                     window.confirm(
                       t("batchDetailActionRetry") +
-                        ` (${batch.requestCountsFailed} ${t("batchActionRetry")})?`,
+                        ` (${batch.requestCountsFailed} ${t("batchActionRetry")})?`
                     )
                   ) {
                     const result = await retry({

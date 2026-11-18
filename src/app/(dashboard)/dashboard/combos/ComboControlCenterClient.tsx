@@ -337,7 +337,7 @@ export default function ComboControlCenterClient({ comboId }: { comboId: string 
               {summary.isActive ? t("active") : t("disabled")}
             </span>
           </div>
-          <p className="mt-2 max-w-3xl text-sm text-text-muted">
+          <p className="mt-2 max-w-none w-full text-sm text-text-muted">
             {t.rich("description", {
               combo: () => <code className="font-mono text-text-main">{combo.name}</code>,
             })}

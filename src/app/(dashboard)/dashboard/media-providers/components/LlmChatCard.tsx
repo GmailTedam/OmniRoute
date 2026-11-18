@@ -454,7 +454,7 @@ export function LlmChatCard({
             <p className="text-[11px] text-text-muted/70">{t("sendHint")}</p>
           </div>
         ) : (
-          <div className="mx-auto flex max-w-3xl flex-col divide-y divide-border/60">
+          <div className="mx-auto flex max-w-none w-full flex-col divide-y divide-border/60">
             {messages.map((msg, i) => {
               const isUser = msg.role === "user";
               const isError =
